@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+    
+<head>
+    <meta charset="UTF-8">
+    <title>To Do App</title>
+    <style>
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- pop up an error message in case something goes wrong with our AJAX request -->
+    <div id="error" class="hidden">Something went wrong!</div>
+    <!-- form to submit a new task-->
+    <form id="form">
+        <div>
+            <label for="description">Add a new task: </label>
+            <input type="text" name="description" id="description">
+        </div>
+        <div>
+            <input type="submit" value="Create">
+        </div>
+    </form>
+
+    <!-- show the current list of to-do items -->
+    <ul>
+        <!-- put data into the HTML template-->
+        {% for d in data %}
+            <li>{{ d.description }}</li>
+        {% endfor %}
+    </ul>
+
+    <!-- AJAX request to update the view asynchronously -->
+    <script>
+        let descriptionInput = document.getElementById('description');
+
+        // prevent the default action for the form and use fetch()
+        document.getElementById('form').onsubmit = function(e) {
+            e.preventDefault();
+            let desc = descriptionInput.value;
+            // descriptionInput.value = '';
+            
+            // implement a fetch() routine and pasrse the response
+            fetch('/todos/create', {
+                method: 'POST',
+                body: JSON.stringify({
+                    'description': desc,
+                }),
+                headers: {
+                    'Content-type': 'application/json'
+                }
+            })
+            .then(response => response.json())
+            .then(jsonResponse => {
+                console.log('response', jsonResponse);
+                // create a list element and add it to our <ul> element
+                let liItem = document.createElement('li');
+                liItem.innerText = jsonResponse['description'];
+                document.getElementById('todos').appendChild(liItem);
+                
+                // if nothing goes wrong
+                document.getElementById('error').className = 'hidden';
+            })
+            .catch(function() {
+                document.getElementById('error').className = '';
+            })
+        }
+    </script>
+
+</body>
+
+</html>
