@@ -1,0 +1,21 @@
+.hidden {
+    display: none;
+}
+
+.unordered-list {
+    list-style: none;
+    padding: 0;
+    width: 20%;
+}
+
+li {
+    clear: both;
+}
+
+li button {
+    color: red;
+    float: right;
+    cursor: pointer;
+    outline: none;
+    border: none;
+}
